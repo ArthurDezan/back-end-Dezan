@@ -41,9 +41,9 @@ saveUsers(){
 }
 
     
-    addUser(nome,email){
+    addUser(nome,email,senha,endereço,telefone,cpf){
         try{
-        const user = new User(this.nextID++, nome, email);// novoid++ é pra toda vez aumentar um no id
+        const user = new User(this.nextID++, nome, email,senha,endereço,telefone,cpf);// novoid++ é pra toda vez aumentar um no id
         this.users.push(user);
         this.saveUsers();
         return user;
