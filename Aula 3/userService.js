@@ -6,8 +6,8 @@ const { json } = require("express");
 class userService{
     constructor(){ //quando não passa parâmetro traz um valor fixo, que não muda
         this.filePath = path.join(__dirname, 'user.json');    
-        this.users = [] // esse array é pra armazenar o user
-        this.nextID = 1 //contador para gerar id
+        this.users = this.loadUsers(); // esse array é pra armazenar o user
+        this.nextID = this.getUsers(); //contador para gerar id
     }
 
     loadUsers(){
@@ -45,6 +45,7 @@ saveUsers(){
         try{
         const user = new User(this.nextID++, nome, email);// novoid++ é pra toda vez aumentar um no id
         this.users.push(user);
+        this.saveUsers();
         return user;
         }catch(erro){
             console.log("erro ao adicionar usuário", erro);
