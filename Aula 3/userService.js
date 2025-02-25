@@ -7,7 +7,7 @@ class userService{
     constructor(){ //quando não passa parâmetro traz um valor fixo, que não muda
         this.filePath = path.join(__dirname, 'user.json');    
         this.users = this.loadUsers(); // esse array é pra armazenar o user
-        this.nextID = this.getUsers(); //contador para gerar id
+        this.nextID = this.getNextId(); //contador para gerar id
     }
 
     loadUsers(){
@@ -34,7 +34,7 @@ class userService{
 
 saveUsers(){
     try{
-    fs.writeFileSync(this.filePath, json.stringify(this.users));
+    fs.writeFileSync(this.filePath, JSON.stringify(this.users));
 }catch(erro){
     console.log('erro ao salvar arquivo');
 }
