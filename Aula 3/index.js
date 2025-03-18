@@ -20,6 +20,27 @@ app.get("/users", (req, res)=>{
     res.json(userService.getUsers())
 })
 
+app.delete("/users/:id", (req, res) =>{
+    const id = parseInt(req.params.id)
+    try{
+        const resultado = userService.deleteUser(id)
+        res.status(200).json({resultado})
+    }catch(erro){
+        res.status(404).json({error: erro.message})
+    }
+})
+
+app.put("/users/:id", (req, res) =>{
+    const id = parseInt(req.params.id)
+    const {nome, email, senha, endereço, telefone, cpf} = req.body
+    try{
+        const resultado = userService.putUser(id, nome, email, senha, endereço, telefone, cpf)
+        res.status(200).json({resultado})
+    }catch(erro){
+        res.status(404).json({error: erro.message})
+    }
+})
+
 const port = 3000
 app.listen (port, () =>{
     console.log("O servidor está rodando na porta: ", port)

@@ -58,6 +58,30 @@ saveUsers(){
             console.log("erro ao buscar usuário");
         }
     }
+    deleteUser(id){
+        try{
+            this.users = this.users.filter(user => user.id !== id);
+            this.saveUsers();
+        }catch{
+            console.log("erro ao deletar usuário");
+        }
+    }
+    putUser(id, nome, email, senha, endereço, telefone, cpf){
+        try{
+            const user = this.users.find(user => user.id === id);
+            if(!user) throw new Error("Usuário não encontrado");
+            user.nome = nome;
+            user.email = email;
+            user.senha = senha;
+            user.endereço = endereço;
+            user.telefone = telefone;
+            user.cpf = cpf;
+            this.saveUsers();
+            return user;
+        }catch(erro){
+            console.log("erro ao atualizar usuário", erro);
+        }
+    }
 }
 
 module.exports = new userService;
