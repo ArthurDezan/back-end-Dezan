@@ -2,6 +2,7 @@ const User = require("./user")
 const path = require("path") //modulo p manipular caminhos
 const fs = require("fs");//modulo p manipular arquivos
 const { json } = require("express");
+const bcrypt = require("bcryptjs");
 
 class userService{
     constructor(){ //quando não passa parâmetro traz um valor fixo, que não muda
@@ -41,12 +42,13 @@ saveUsers(){
 }
 
     
-    addUser(nome,email,senha,endereço,telefone,cpf){
+    async addUser(nome,email,senha,endereço,telefone,cpf){
         try{
-        const user = new User(this.nextID++, nome, email,senha,endereço,telefone,cpf);// novoid++ é pra toda vez aumentar um no id
-        this.users.push(user);
-        this.saveUsers();
-        return user;
+            const senhaCripto = await bcrypt.hash(senha, 10);
+            const user = new User(this.nextID++, nome, email,senhaCripto,endereço,telefone,cpf);// nextID++ é pra toda vez aumentar um no id
+            this.users.push(user);
+            this.saveUsers();
+            return user;
         }catch(erro){
             console.log("erro ao adicionar usuário", erro);
         }
@@ -66,13 +68,14 @@ saveUsers(){
             console.log("erro ao deletar usuário");
         }
     }
-    putUser(id, nome, email, senha, endereço, telefone, cpf){
+    async putUser(id, nome, email, senha, endereço, telefone, cpf){
         try{
+            const senhaCripto = await bcrypt.hash(senha, 10);
             const user = this.users.find(user => user.id === id);
             if(!user) throw new Error("Usuário não encontrado");
             user.nome = nome;
             user.email = email;
-            user.senha = senha;
+            user.senha = senhaCripto;
             user.endereço = endereço;
             user.telefone = telefone;
             user.cpf = cpf;
