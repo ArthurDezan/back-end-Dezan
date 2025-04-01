@@ -77,11 +77,11 @@ saveUsers(){
     }
     async putUser(id, nome, email, senha, endereço, telefone, cpf){
         try{
-            const cpfExistente = this.users.some(user => user.cpf === cpf);
-            if(cpfExistente){
-                console.log ("CPF já cadastrado")
-                throw new Error("CPF já cadastrado")
-            } 
+           const cpfExistente = this.users.some(u=> u.cpf === cpf && u.id !== id);
+           if(cpfExistente){
+               console.log("CPF já cadastrado");
+               throw new Error("CPF já cadastrado");
+            }
             const senhaCripto = await bcrypt.hash(senha, 10);
             const user = this.users.find(user => user.id === id);
             if(!user) throw new Error("Usuário não encontrado");
@@ -94,8 +94,8 @@ saveUsers(){
             this.saveUsers();
             return user;
         }catch(erro){
-            console.log("erro ao atualizar usuário", erro);
-            res.status(500).json({ error: erro.message })
+            console.log("Erro ao editar usuário", erro);
+            throw erro;
         }
     }
 }

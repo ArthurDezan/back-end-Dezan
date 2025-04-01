@@ -34,15 +34,15 @@ app.delete("/users/:id", (req, res) => {
     }
 })
 
-app.put("/users/:id", (req, res) => {
+app.put("/users/:id", async (req, res) => {
+    try {
     const id = parseInt(req.params.id)
     const { nome, email, senha, endereço, telefone, cpf } = req.body
-    try {
         const resultado = userService.putUser(id, nome, email, senha, endereço, telefone, cpf)
         res.status(200).json({ resultado })
     } catch (erro) {
-        res.status(404).json({ error: erro.message })
-        res.status(401).json({ error: erro.message })
+        console.error("Erro ao editar usuário:", erro);
+        res.status(500).json({ error: "Ja possui um usuario com este cpf" });
     }
 })
 
