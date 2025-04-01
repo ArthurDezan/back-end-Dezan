@@ -45,10 +45,10 @@ saveUsers(){
     
     async addUser(nome,email,senha,endereço,telefone,cpf){
         try{
-            const cpfExistente = this.users.find(user => user.cpf === cpf);
+            const cpfExistente = this.users.some(user => user.cpf === cpf);
             if(cpfExistente){
                 console.log ("CPF já cadastrado")
-                return { error: "CPF já cadastrado." }
+                throw new Error("CPF já cadastrado")
             } 
             const senhaCripto = await bcrypt.hash(senha, 10);
             const user = new User(this.nextID++, nome, email,senhaCripto,endereço,telefone,cpf);// nextID++ é pra toda vez aumentar um no id
@@ -57,6 +57,7 @@ saveUsers(){
             return user;
         }catch(erro){
             console.log("erro ao adicionar usuário", erro);
+            throw erro;
         }
     }
     getUsers(){
@@ -76,6 +77,11 @@ saveUsers(){
     }
     async putUser(id, nome, email, senha, endereço, telefone, cpf){
         try{
+            const cpfExistente = this.users.some(user => user.cpf === cpf);
+            if(cpfExistente){
+                console.log ("CPF já cadastrado")
+                throw new Error("CPF já cadastrado")
+            } 
             const senhaCripto = await bcrypt.hash(senha, 10);
             const user = this.users.find(user => user.id === id);
             if(!user) throw new Error("Usuário não encontrado");
@@ -89,6 +95,7 @@ saveUsers(){
             return user;
         }catch(erro){
             console.log("erro ao atualizar usuário", erro);
+            res.status(500).json({ error: erro.message })
         }
     }
 }

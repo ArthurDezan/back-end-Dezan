@@ -7,5 +7,14 @@
         "endereço": "12345",
         "telefone": "12345",
         "cpf": "12345"
+    },
+    {
+        "id": 2,
+        "nome": "teste02",
+        "email": "teste02@gmail.com",
+        "senha": "$2b$10$ekD4i0zSzlRmufprWEM0Pe/XRDnmzz0t2wq7RDW37AyoEKuGrpSfa",
+        "endereço": "12345",
+        "telefone": "12345",
+        "cpf": "6789"
     }
 ]
