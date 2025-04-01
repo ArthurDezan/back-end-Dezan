@@ -3,6 +3,7 @@ const path = require("path") //modulo p manipular caminhos
 const fs = require("fs");//modulo p manipular arquivos
 const { json } = require("express");
 const bcrypt = require("bcryptjs");
+const { error } = require("console");
 
 class userService{
     constructor(){ //quando não passa parâmetro traz um valor fixo, que não muda
@@ -44,6 +45,11 @@ saveUsers(){
     
     async addUser(nome,email,senha,endereço,telefone,cpf){
         try{
+            const cpfExistente = this.users.find(user => user.cpf === cpf);
+            if(cpfExistente){
+                console.log ("CPF já cadastrado")
+                return { error: "CPF já cadastrado." }
+            } 
             const senhaCripto = await bcrypt.hash(senha, 10);
             const user = new User(this.nextID++, nome, email,senhaCripto,endereço,telefone,cpf);// nextID++ é pra toda vez aumentar um no id
             this.users.push(user);
