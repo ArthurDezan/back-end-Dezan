@@ -4,6 +4,7 @@ const fs = require("fs");//modulo p manipular arquivos
 const { json } = require("express");
 const bcrypt = require("bcryptjs");
 const { error } = require("console");
+const mysql = require("./mysql")
 
 class userService{
     constructor(){ //quando não passa parâmetro traz um valor fixo, que não muda
@@ -51,10 +52,14 @@ saveUsers(){
                 throw new Error("CPF já cadastrado")
             } 
             const senhaCripto = await bcrypt.hash(senha, 10);
-            const user = new User(this.nextID++, nome, email,senhaCripto,endereço,telefone,cpf);// nextID++ é pra toda vez aumentar um no id
-            this.users.push(user);
-            this.saveUsers();
-            return user;
+            
+            const resultados = await mysql.execute(
+                `INSERT INTO usuarios (nome, email, senha, endereço, telefone, CPF) 
+                      VALUES (?, ?, ?, ?, ?, ?);`,
+                      [nome, email, senhaCripto, endereço, telefone, cpf]
+            );
+            return resultados;
+
         }catch(erro){
             console.log("erro ao adicionar usuário", erro);
             throw erro;
