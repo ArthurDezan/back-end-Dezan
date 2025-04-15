@@ -46,11 +46,6 @@ saveUsers(){
     
     async addUser(nome,email,senha,endereço,telefone,cpf){
         try{
-            const cpfExistente = this.users.some(user => user.cpf === cpf);
-            if(cpfExistente){
-                console.log ("CPF já cadastrado")
-                throw new Error("CPF já cadastrado")
-            } 
             const senhaCripto = await bcrypt.hash(senha, 10);
             
             const resultados = await mysql.execute(
@@ -82,21 +77,13 @@ saveUsers(){
     }
     async putUser(id, nome, email, senha, endereço, telefone, cpf){
         try{
-           const cpfExistente = this.users.some(u=> u.cpf === cpf && u.id !== id);
-           if(cpfExistente){
-               console.log("CPF já cadastrado");
-               throw new Error("CPF já cadastrado");
-            }
             const senhaCripto = await bcrypt.hash(senha, 10);
-            const user = this.users.find(user => user.id === id);
-            if(!user) throw new Error("Usuário não encontrado");
-            user.nome = nome;
-            user.email = email;
-            user.senha = senhaCripto;
-            user.endereço = endereço;
-            user.telefone = telefone;
-            user.cpf = cpf;
-            this.saveUsers();
+            const user = await mysql.execute(
+                `UPDATE usuarios 
+                SET nome = ? , email = ? , senha = ? , endereço = ? , telefone = ? , cpf = ? 
+                WHERE idusuario = ?;`,
+                      [nome, email, senhaCripto, endereço, telefone, cpf, id]
+            );
             return user;
         }catch(erro){
             console.log("Erro ao editar usuário", erro);

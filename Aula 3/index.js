@@ -39,7 +39,7 @@ app.put("/users/:id", async (req, res) => {
     const id = parseInt(req.params.id)
     const { nome, email, senha, endereço, telefone, cpf } = req.body
         const resultado = userService.putUser(id, nome, email, senha, endereço, telefone, cpf)
-        res.status(200).json({ resultado })
+        res.status(200).json({ mensagem: "Usuário editado com sucesso!" })
     } catch (erro) {
         console.error("Erro ao editar usuário:", erro);
         res.status(500).json({ error: "Ja possui um usuario com este cpf" });
